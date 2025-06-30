@@ -177,3 +177,42 @@ document.addEventListener("visibilitychange", function(_event) {
     recorder.pause();
   }
 });
+
+// Track Turbo navigation events
+document.addEventListener("turbo:visit", function(event) {
+  log("turbo:visit", event.detail.url);
+
+  // Record custom navigation event
+  const customEvent = {
+    type: 5, // Custom event type
+    data: {
+      tag: "navigation",
+      payload: {
+        url: event.detail.url,
+        action: event.detail.action || "advance"
+      }
+    },
+    timestamp: Date.now()
+  };
+
+  recorder.events.add(customEvent);
+});
+
+// Also track turbo:load for when pages finish loading
+document.addEventListener("turbo:load", function(_event) {
+  log("turbo:load", window.location.href);
+
+  // Record custom page load event
+  const customEvent = {
+    type: 5, // Custom event type
+    data: {
+      tag: "page_load",
+      payload: {
+        url: window.location.href
+      }
+    },
+    timestamp: Date.now()
+  };
+
+  recorder.events.add(customEvent);
+});

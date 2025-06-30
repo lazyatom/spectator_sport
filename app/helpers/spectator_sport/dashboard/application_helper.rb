@@ -19,6 +19,23 @@ module SpectatorSport
           "#{remaining_seconds}s"
         end
       end
+
+      def visited_paths_display(paths)
+        return "No paths" if paths.empty?
+
+        paths.map { |path| truncate_path_with_title(path) }.to_sentence.html_safe
+      end
+
+      private
+
+      def truncate_path_with_title(path, max_length = 30)
+        if path.length > max_length
+          truncated = path[0...max_length] + "..."
+          tag.span(truncated, title: path)
+        else
+          tag.span(path, title: path)
+        end
+      end
     end
   end
 end
