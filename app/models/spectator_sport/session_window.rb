@@ -100,5 +100,46 @@ module SpectatorSport
         "#{paths.first(3).join(", ")} +#{paths.length - 3} more"
       end
     end
+
+    def utm_source
+      metadata&.dig('utm_source')
+    end
+
+    def utm_campaign
+      metadata&.dig('utm_campaign')
+    end
+
+    def utm_medium
+      metadata&.dig('utm_medium')
+    end
+
+    def utm_term
+      metadata&.dig('utm_term')
+    end
+
+    def referrer
+      metadata&.dig('referrer')
+    end
+
+    def initial_url
+      metadata&.dig('initial_url')
+    end
+
+    def marketing_display
+      return "No metadata" if metadata.blank?
+
+      parts = []
+      parts << metadata['utm_source'] if metadata['utm_source'].present?
+      parts << metadata['utm_campaign'] if metadata['utm_campaign'].present?
+      parts << "(#{metadata['utm_medium']})" if metadata['utm_medium'].present?
+
+      if parts.any?
+        parts.join(' ')
+      elsif referrer.present?
+        "Referrer: #{referrer}"
+      else
+        "Direct"
+      end
+    end
   end
 end
