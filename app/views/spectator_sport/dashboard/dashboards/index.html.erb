@@ -7,6 +7,7 @@
         <tr>
           <th>Recording</th>
           <th>Session ID</th>
+          <th>Duration</th>
           <th>Updated</th>
           <th>Created</th>
           <th>Actions</th>
@@ -17,6 +18,7 @@
           <tr>
             <td><%= link_to "Session (Window ##{session_window.id})", session_window_path(session_window.id) %></td>
             <td><%= session_window.session_id %></td>
+            <td><%= formatted_duration session_window.duration %></td>
             <td><%= tag.time(time_ago_in_words(session_window.updated_at), datetime: session_window.updated_at, title: session_window.updated_at) %>
             <td><%= tag.time(time_ago_in_words(session_window.created_at), datetime: session_window.created_at, title: session_window.created_at) %>
             <td>
