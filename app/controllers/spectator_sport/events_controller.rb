@@ -7,18 +7,24 @@ module SpectatorSport
 
     def create
       data = if params.key?(:sessionId) && params.key?(:windowId) && params.key?(:events)
-        params.slice(:sessionId, :windowId, :events).stringify_keys
+        params.slice(:sessionId, :windowId, :events, :metadata).stringify_keys
       else
         # beacon sends JSON in the request body
-        JSON.parse(request.body.read).slice("sessionId", "windowId", "events")
+        JSON.parse(request.body.read).slice("sessionId", "windowId", "events", "metadata")
       end
 
       session_secure_id = data["sessionId"]
       window_secure_id = data["windowId"]
       events = data["events"]
+      metadata = data["metadata"]
 
       session = Session.find_or_create_by(secure_id: session_secure_id)
       window = SessionWindow.find_or_create_by(secure_id: window_secure_id, session: session)
+
+      # Update session window metadata if provided
+      if metadata.present? && window.metadata.blank?
+        window.update(metadata: metadata)
+      end
 
       records_data = events.map do |event|
         { session_id: session.id, session_window_id: window.id, event_data: event, created_at: Time.at(event["timestamp"].to_f / 1000.0) }
