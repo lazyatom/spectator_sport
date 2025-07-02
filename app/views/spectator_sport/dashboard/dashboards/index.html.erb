@@ -23,8 +23,8 @@
             <td><%= session_window.session_id %></td>
             <td><%= session_window.marketing_display %></td>
             <td><%= session_window.visited_paths_display %></td>
-            <td><%= formatted_duration session_window.duration %></td>
-            <td><%= formatted_duration session_window.active_duration %></td>
+            <td><%= formatted_duration session_window.duration.to_i %></td>
+            <td><%= formatted_duration session_window.active_duration.to_i %></td>
             <td><%= tag.time(time_ago_in_words(session_window.updated_at), datetime: session_window.updated_at, title: session_window.updated_at) %>
             <td><%= tag.time(time_ago_in_words(session_window.created_at), datetime: session_window.created_at, title: session_window.created_at) %>
             <td>
