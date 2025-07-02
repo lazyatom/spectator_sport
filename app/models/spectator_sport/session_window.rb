@@ -4,18 +4,18 @@ module SpectatorSport
     has_many :events
 
     def duration
-      return 0 if events.empty?
+      return 0.seconds if events.empty?
 
       earliest_event = events.minimum(:created_at)
       latest_event = events.maximum(:created_at)
 
-      return 0 unless earliest_event && latest_event
+      return 0.seconds unless earliest_event && latest_event
 
       latest_event - earliest_event
     end
 
     def active_duration
-      return 0 if events.empty?
+      return 0.seconds if events.empty?
 
       # Get active events ordered by timestamp
       active_events = events.where("event_data->>'type' = '3' AND (
@@ -23,7 +23,7 @@ module SpectatorSport
         (event_data->'data'->>'source' = '2' AND event_data->'data'->>'type' IN ('0', '1', '2', '3', '4'))
       )").order(:created_at)
 
-      return 0 if active_events.empty?
+      return 0.seconds if active_events.empty?
 
       # Calculate duration excluding gaps longer than 30 seconds
       total_active_duration = 0
@@ -45,7 +45,7 @@ module SpectatorSport
         end
       end
 
-      total_active_duration
+      total_active_duration.seconds
     end
 
     def visited_paths
